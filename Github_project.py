@@ -43,7 +43,8 @@ def monthly_total():#Creating function for Monthly Total
 
 
 def remaining_budget():#Creating a function for showing the reamaining budget
-    cursor.execute("SELECT limit FROM budget WHERE mon='November'")
+    mon = input("Enter the month: ")
+    cursor.execute("SELECT limit FROM budget WHERE mon = %s", (mon,))
     row = cursor.fetchone()#Fetching a specific value from the database
 
     if row is None:
