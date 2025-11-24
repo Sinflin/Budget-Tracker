@@ -1,37 +1,38 @@
-import mysql.connector as mycon
+import mysql.connector as mycon#Importing Mysql.connector module for Functions to connect Mysql
 
 db = mycon.connect(
     host="localhost",
     user="root",
     password="tiger",
     database='budget_tracker'
-)
+)#Real connection between Mysql and python
 
-cursor = db.cursor()
-
-def add_expense():
+cursor = db.cursor()#Creating a cursor to move in MySql
+#------------------------------------
+#    All function required
+#------------------------------------
+def add_expense():#Function for adding the expense in the database
     name = input("Enter the name for the expense: ")
     category = input("Enter the category: ")
     amount = float(input("Enter the amount: "))
     date = input("Enter the date (YYYY-MM-DD): ")
 
     query = "INSERT INTO expenses(name, category, amount, date) VALUES (%s, %s, %s, %s)"
-    cursor.execute(query, (name, category, amount, date))
+    cursor.execute(query, (name, category, amount, date))#Executing the Function in Mysql
     db.commit()
     print("Expense added to database successfully")
 
 
-def view_expense():
+def view_expense():#Formation of function for viewing the Expenses from MySQL
     cursor.execute("SELECT * FROM expenses")
-    rows = cursor.fetchall()
+    rows = cursor.fetchall()#Fetching the data from MySQL
     if not rows:
         print("No expenses found.")
     for row in rows:
         print(row)
 
 
-def monthly_total():
-    
+def monthly_total():#Creating function for Monthly Total    
     cursor.execute("SELECT SUM(amount) FROM expenses WHERE MONTH(date) = MONTH(CURDATE())")
     total = cursor.fetchone()[0]
 
@@ -41,9 +42,9 @@ def monthly_total():
     print("Total Monthly Expense:", total)
 
 
-def remaining_budget():
+def remaining_budget():#Creating a function for showing the reamaining budget
     cursor.execute("SELECT limit FROM budget WHERE mon='November'")
-    row = cursor.fetchone()
+    row = cursor.fetchone()#Fetching a specific value from the database
 
     if row is None:
         print("No budget set for November.")
@@ -60,7 +61,7 @@ def remaining_budget():
     print("Remaining:", limit_amt - spent)
 
 
-def add_budget():
+def add_budget():# Creating a function for showing the add budget
     mon = input("Enter the Name of the month: ")
     limit = float(input("Enter the monthly limit: "))
 
